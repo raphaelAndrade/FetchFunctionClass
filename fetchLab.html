@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Page Title</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+   </head>
+
+
+   <style>
+       /* General Classes */
+       h1{
+           font-size: 40px;
+           color: maroon;
+           border-bottom: 1px solid maroon;
+       }
+
+       h2 {
+        font-size: 30px;
+        color: maroon;
+        margin: 40px 0;
+       }
+       /* Header section */
+        .header {
+            width: 100%;
+            background-color: maroon;
+            padding: 30px 0;
+        }
+        .logo{
+            width: 250px;
+            height: 50px;
+            border-radius: 20px;
+            background-color: white;
+            text-align: center;
+            color: maroon;
+            line-height: 50px;
+        }
+        .menu a{
+            color: white;
+            display: inline-block;
+            margin-left: 10px;
+            text-decoration: none;
+        }
+
+       .menu a:hover {
+           color:magenta;
+       }
+       /* Users Section */
+        .users {
+            margin: 40px 0;
+        }
+
+
+       ul {
+            list-style: none;
+            margin:0;
+            padding: 0;
+        }
+
+        .card {
+            margin-top: 20px;
+            padding: 20px;
+        }
+
+        .card ul li {
+            font-weight: bold;
+        }
+        
+        .name {
+            font-weight: normal;
+        }
+
+        /*Footer Section*/
+        footer {
+            width: 100%;
+            height: 100px;
+            background-color: maroon;
+        }
+   </style>
+  
+   <body>
+    <!-- Section Header -->
+    <section class="header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="logo">Logo</div>
+                </div>
+                <div class="col-md-9">
+                    <nav class="menu">
+                        <a href="#">About Us</a>
+                        <a href="#">Contact Us</a>
+                        <a href="#">Photos</a>
+                        <a href="#">Users</a>
+                    </nav> <!--Navigation links-->
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--  end Section Header -->
+
+    <!--  Section Users -->
+    <section class="users">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>List of Users</h1>
+                </div>
+            </div>
+            <div class="row">
+                <h2>Filter Users</h2>
+                <div class="col-md-12">
+                    <form class=" align-items-center">
+                        <div class="col-12">
+                            <input type="number" class="form-control" id="idOfuser" placeholder="Please enter a number between 1 - 10">
+                        </div>
+                        <br/>
+                        <div class="col-12">
+                          <button type="submit" id="filter" class="btn btn-primary">Search</button>
+                        </div>
+                      </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <ul id="listUsers"><!--The content will be create by Javascritp --></ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <button onclick="fetchUsers()" type="submit" class="btn btn-primary">Reset List</button>
+                </div>
+                <div class="col-md-6">
+                    <button onclick="undoList()" type="submit" class="btn btn-primary">Undo</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--  End Section Users -->
+
+    <!--  Section Footer -->
+    <footer>
+
+    </footer>
+
+    <script>
+        let listOfUsers = []; //Global Variable
+        let listWithoutDelete = []; //Global Variable
+        let currentId = [];
+        /* Function to fetch all users */
+            const fetchUsers = () => {
+                document.getElementById("listUsers").innerHTML = ""; // remove the list of users before to append the new one
+                //Check the status of the response
+                fetch("https://jsonplaceholder.typicode.com/users").then(response => {
+                    if(response.status !== 200) { // I got some error
+                        console.log("error");
+                    }
+                    //convert data
+                    response.json().then(users => {
+                        listOfUsers = users; //sign the list of users to Global Variavel
+                        listWithoutDelete = users;
+                        //Append the result in the html
+                         users.map(user => {
+                            let userItem = document.createElement('li'); //create the element
+                            userItem.innerHTML = `<div class="card"><ul><li>Name: <span class="name">${user.name}</span></li><li>UserName: <span class="name">${user.username}</span></li><li>Email: <span class="name">${user.email}</span></li><li><button onclick="deleteUser(this.id)" type="submit" id=${user.id} class="btn btn-primary">Delete</button></li></ul></card>`;
+                            document.getElementById("listUsers").appendChild(userItem); //select html element -->    
+                        });
+                    })
+                }).catch(error => { // catch the error
+                    console.log(error)
+                })
+            }
+
+
+          /* Function to fetch a especific user*/ 
+          const filterUsers = id => {
+            fetch(`https://jsonplaceholder.typicode.com/users/${id}`).then(res => {
+                if(res.status !== 200) {
+                    console.log("error");
+                }
+                if(res.status === 404){
+                alert("Please enter a number between 1-10")
+               }
+                res.json().then(user => { // append the data to HTML
+                    document.getElementById("listUsers").innerHTML = ""; // remove the list of users before to append the new one
+                    let userItem = document.createElement('li'); //create the element
+                    userItem.innerHTML = `<div class="card"><ul><li>Name: <span class="name">${user.name}</span></li><li>UserName: <span class="name">${user.username}</span></li><li>Email: <span class="name">${user.email}</span></li><li><button onclick="deleteUser(this.id) type="submit" id=${user.id} class="btn btn-primary">Delete</button></li></ul></card>`;
+                    document.getElementById("listUsers").appendChild(userItem); //select html element -->  
+                })
+            }).catch(err => {
+                console.log(err);
+            })
+          }
+
+          /*Add event click to filter users*/
+          document.getElementById("filter").addEventListener("click",(e)=>{
+            e.preventDefault();
+            let idUser = document.getElementById("idOfuser").value;
+            if(idUser === ""){ //validation
+                alert("The input can not be empty. Please try again");
+            } if(idUser > 10 || idUser < 1){
+                alert("Please enter a number between 1-10")
+            } else {
+                filterUsers(idUser);
+            }
+          })
+
+          /*Delete user function*/
+          const deleteUser = (id) => {
+            currentId.push(parseInt(id));
+            document.getElementById("listUsers").innerHTML = ""; // remove the list of users before to append the new one
+            let newList = listWithoutDelete.filter(user => {
+                return parseInt(user.id) !== parseInt(id);
+            });
+            newList.map(user => {
+                let userItem = document.createElement('li'); //create the element
+                userItem.innerHTML = `<div class="card"><ul><li>Name: <span class="name">${user.name}</span></li><li>UserName: <span class="name">${user.username}</span></li><li>Email: <span class="name">${user.email}</span></li><li><button onclick="deleteUser(this.id)" type="submit" id=${user.id} class="btn btn-primary">Delete</button></li></ul></card>`;
+                document.getElementById("listUsers").appendChild(userItem); //select html element -->    
+            });
+            listWithoutDelete = newList;
+          }
+
+          /*Undo List*/
+          const undoList = () => {
+            document.getElementById("listUsers").innerHTML = ""; // remove the list of users before to append the new one
+            let deletedUser = listOfUsers.filter(user => {
+                return parseInt(user.id) === parseInt(currentId.length);
+            })
+            let undoArr = [...deletedUser,...listWithoutDelete];
+            undoArr.map(user => {
+                let userItem = document.createElement('li'); //create the element
+                userItem.innerHTML = `<div class="card"><ul><li>Name: <span class="name">${user.name}</span></li><li>UserName: <span class="name">${user.username}</span></li><li>Email: <span class="name">${user.email}</span></li><li><button onclick="deleteUser(this.id)" type="submit" id=${user.id} class="btn btn-primary">Delete</button></li></ul></card>`;
+                document.getElementById("listUsers").appendChild(userItem); //select html element -->    
+            });
+            currentId.pop();
+            listWithoutDelete = undoArr;
+          }
+
+        fetchUsers()
+    </script>
+   </body>
+</html>
+
+
