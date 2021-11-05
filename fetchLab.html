@@ -87,7 +87,7 @@
                 </div>
                 <div class="col-md-9">
                     <nav class="menu">
-                        <a href="#">About</a>
+                        <a href="#">About Us</a>
                         <a href="#">Contact Us</a>
                         <a href="#">Photos</a>
                         <a href="#">Users</a>
@@ -206,7 +206,7 @@
 
           /*Delete user function*/
           const deleteUser = (id) => {
-            currentId.push(parseInt(id));
+            currentId.push(listOfUsers[id-1]);
             document.getElementById("listUsers").innerHTML = ""; // remove the list of users before to append the new one
             let newList = listWithoutDelete.filter(user => {
                 return parseInt(user.id) !== parseInt(id);
@@ -221,29 +221,27 @@
 
           /*Undo List*/
           const undoList = () => {
-            document.getElementById("listUsers").innerHTML = ""; // remove the list of users before to append the new one
-            let deletedUser = listOfUsers.filter(user => {
-                return parseInt(user.id) === parseInt(currentId.length);
-            })
-            let undoArr = [...deletedUser,...listWithoutDelete];
-            undoArr.map(user => {
-                let userItem = document.createElement('li'); //create the element
-                userItem.innerHTML = `<div class="card"><ul><li>Name: <span class="name">${user.name}</span></li><li>UserName: <span class="name">${user.username}</span></li><li>Email: <span class="name">${user.email}</span></li><li><button onclick="deleteUser(this.id)" type="submit" id=${user.id} class="btn btn-primary">Delete</button></li></ul></card>`;
-                document.getElementById("listUsers").appendChild(userItem); //select html element -->    
-            });
-            currentId.pop();
-            listWithoutDelete = undoArr;
+            if(currentId.length === 0){
+                alert("You need to delete a user first")
+            }else {
+                document.getElementById("listUsers").innerHTML = ""; // remove the list of users before to append the new one
+                let deletedUser = listOfUsers.filter(user => {
+                    return parseInt(user.id) === parseInt(currentId.at(-1).id);
+                })
+                let undoArr = [...deletedUser,...listWithoutDelete];
+                undoArr.map(user => {
+                    let userItem = document.createElement('li'); //create the element
+                    userItem.innerHTML = `<div class="card"><ul><li>Name: <span class="name">${user.name}</span></li><li>UserName: <span class="name">${user.username}</span></li><li>Email: <span class="name">${user.email}</span></li><li><button onclick="deleteUser(this.id)" type="submit" id=${user.id} class="btn btn-primary">Delete</button></li></ul></card>`;
+                    document.getElementById("listUsers").appendChild(userItem); //select html element -->    
+                });
+                currentId.pop();
+                listWithoutDelete = undoArr;
+            }
+           
           }
 
         fetchUsers()
-
-         /*Function to create a new users*/
-         const createUsers = (obj) => {
-              // do the magic
-              return null //return a new users
-          }
     </script>
    </body>
 </html>
-
 
