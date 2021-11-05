@@ -97,6 +97,28 @@
         </div>
     </section>
     <!--  end Section Header -->
+    <!--Section Form enter a new user-->
+    <section>
+        <div class="form">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>Enter a new user</h2>
+                        <div class="card">
+                            <form>
+                                <label>Name:</label>
+                                <input type="text"  name="name" id="name" placeholder="Enter a name"/>
+                                <input type="text"  name="username" id="username" placeholder="Enter username">
+                                <input type="email"  name="email" id="email" placeholder="Enter email">
+                                <br>
+                                <button class="submit btn btn-primary" id="submit">Submit User</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!--  Section Users -->
     <section class="users">
@@ -111,7 +133,7 @@
                 <div class="col-md-12">
                     <form class=" align-items-center">
                         <div class="col-12">
-                            <input type="number" class="form-control" id="idOfuser" placeholder="Please enter a number between 1 - 10">
+                            <input type="number" required class="form-control" id="idOfuser" placeholder="Please enter a number between 1 - 10">
                         </div>
                         <br/>
                         <div class="col-12">
@@ -143,6 +165,7 @@
     </footer>
 
     <script>
+    
         let listOfUsers = []; //Global Variable
         let listWithoutDelete = []; //Global Variable
         let currentId = [];
@@ -170,7 +193,42 @@
                 })
             }
 
+            /* Function submitForm to add a new user*/
+            const submitForm = ()=> {
+                //Grab the values from the form
+                let nameUser= document.getElementById("name").value;
+                let userName = document.getElementById("username").value;
+                let Email= document.getElementById("email").value;
+                
+                if(nameUser === "" || userName === "" || Email === "") {
+                    alert("The form required ")
+                } else {
+                    //Create a new object user
+                let newUser = {
+                    name: nameUser,
+                    username: userName,
+                    email :Email,
+                }
 
+                // add a new user to the users list
+                let addNewUser = [newUser,...listWithoutDelete]
+                document.getElementById("listUsers").innerHTML = ""; // Clean the itens to the list
+
+                addNewUser.map(user => { // create a new list in the HTML with a new user
+                let userItem = document.createElement('li'); //create the element
+                userItem.innerHTML = `<div class="card"><ul><li>Name: <span class="name">${user.name}</span></li><li>UserName: <span class="name">${user.username}</span></li><li>Email: <span class="name">${user.email}</span></li><li><button onclick="deleteUser(this.id)" type="submit" id=${user.id} class="btn btn-primary">Delete</button></li></ul></card>`;
+                document.getElementById("listUsers").appendChild(userItem); //select html element -->    
+            });
+
+            listWithoutDelete = addNewUser; // update the global variable with the last version of the user list.   
+                }
+            }
+
+           /*add event click to new users function*/
+           document.getElementById("submit").addEventListener("click",(element) => {
+            element.preventDefault();
+               submitForm();
+           }) 
           /* Function to fetch a especific user*/ 
           const filterUsers = id => {
             fetch(`https://jsonplaceholder.typicode.com/users/${id}`).then(res => {
