@@ -64,7 +64,7 @@
         .card ul li {
             font-weight: bold;
         }
-        
+
         .name {
             font-weight: normal;
         }
@@ -76,7 +76,7 @@
             background-color: maroon;
         }
    </style>
-  
+
    <body>
     <!-- Section Header -->
     <section class="header">
@@ -165,7 +165,7 @@
     </footer>
 
     <script>
-    
+
         let listOfUsers = []; //Global Variable
         let listWithoutDelete = []; //Global Variable
         let currentId = [];
@@ -185,7 +185,7 @@
                          users.map(user => {
                             let userItem = document.createElement('li'); //create the element
                             userItem.innerHTML = `<div class="card"><ul><li>Name: <span class="name">${user.name}</span></li><li>UserName: <span class="name">${user.username}</span></li><li>Email: <span class="name">${user.email}</span></li><li><button onclick="deleteUser(this.id)" type="submit" id=${user.id} class="btn btn-primary">Delete</button></li></ul></card>`;
-                            document.getElementById("listUsers").appendChild(userItem); //select html element -->    
+                            document.getElementById("listUsers").appendChild(userItem); //select html element -->
                         });
                     })
                 }).catch(error => { // catch the error
@@ -199,7 +199,7 @@
                 let nameUser= document.getElementById("name").value;
                 let userName = document.getElementById("username").value;
                 let Email= document.getElementById("email").value;
-                
+
                 if(nameUser === "" || userName === "" || Email === "") {
                     alert("The form required ")
                 } else {
@@ -212,15 +212,21 @@
 
                 // add a new user to the users list
                 let addNewUser = [newUser,...listWithoutDelete]
+                let i = 0;
+                addNewUser.map((user) => {
+                  user["id"] = i;
+                  i++;
+                });
+                
                 document.getElementById("listUsers").innerHTML = ""; // Clean the itens to the list
 
                 addNewUser.map(user => { // create a new list in the HTML with a new user
                 let userItem = document.createElement('li'); //create the element
                 userItem.innerHTML = `<div class="card"><ul><li>Name: <span class="name">${user.name}</span></li><li>UserName: <span class="name">${user.username}</span></li><li>Email: <span class="name">${user.email}</span></li><li><button onclick="deleteUser(this.id)" type="submit" id=${user.id} class="btn btn-primary">Delete</button></li></ul></card>`;
-                document.getElementById("listUsers").appendChild(userItem); //select html element -->    
+                document.getElementById("listUsers").appendChild(userItem); //select html element -->
             });
 
-            listWithoutDelete = addNewUser; // update the global variable with the last version of the user list.   
+            listWithoutDelete = addNewUser; // update the global variable with the last version of the user list.
                 }
             }
 
@@ -228,8 +234,8 @@
            document.getElementById("submit").addEventListener("click",(element) => {
             element.preventDefault();
                submitForm();
-           }) 
-          /* Function to fetch a especific user*/ 
+           })
+          /* Function to fetch a especific user*/
           const filterUsers = id => {
             fetch(`https://jsonplaceholder.typicode.com/users/${id}`).then(res => {
                 if(res.status !== 200) {
@@ -242,7 +248,7 @@
                     document.getElementById("listUsers").innerHTML = ""; // remove the list of users before to append the new one
                     let userItem = document.createElement('li'); //create the element
                     userItem.innerHTML = `<div class="card"><ul><li>Name: <span class="name">${user.name}</span></li><li>UserName: <span class="name">${user.username}</span></li><li>Email: <span class="name">${user.email}</span></li><li><button onclick="deleteUser(this.id) type="submit" id=${user.id} class="btn btn-primary">Delete</button></li></ul></card>`;
-                    document.getElementById("listUsers").appendChild(userItem); //select html element -->  
+                    document.getElementById("listUsers").appendChild(userItem); //select html element -->
                 })
             }).catch(err => {
                 console.log(err);
@@ -272,7 +278,7 @@
             newList.map(user => {
                 let userItem = document.createElement('li'); //create the element
                 userItem.innerHTML = `<div class="card"><ul><li>Name: <span class="name">${user.name}</span></li><li>UserName: <span class="name">${user.username}</span></li><li>Email: <span class="name">${user.email}</span></li><li><button onclick="deleteUser(this.id)" type="submit" id=${user.id} class="btn btn-primary">Delete</button></li></ul></card>`;
-                document.getElementById("listUsers").appendChild(userItem); //select html element -->    
+                document.getElementById("listUsers").appendChild(userItem); //select html element -->
             });
             listWithoutDelete = newList;
           }
@@ -290,16 +296,15 @@
                 undoArr.map(user => {
                     let userItem = document.createElement('li'); //create the element
                     userItem.innerHTML = `<div class="card"><ul><li>Name: <span class="name">${user.name}</span></li><li>UserName: <span class="name">${user.username}</span></li><li>Email: <span class="name">${user.email}</span></li><li><button onclick="deleteUser(this.id)" type="submit" id=${user.id} class="btn btn-primary">Delete</button></li></ul></card>`;
-                    document.getElementById("listUsers").appendChild(userItem); //select html element -->    
+                    document.getElementById("listUsers").appendChild(userItem); //select html element -->
                 });
                 currentId.pop();
                 listWithoutDelete = undoArr;
             }
-           
+
           }
 
         fetchUsers()
     </script>
    </body>
 </html>
-
