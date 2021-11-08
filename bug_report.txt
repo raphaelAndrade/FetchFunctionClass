@@ -1,0 +1,20 @@
+I am writing a bug report instead of "fixing" the bug,
+because the cause of the bug presents
+an underlying issue with the design pattern of the entire script.
+In such case, I believe that a code should be re-written from scratch,
+with a design pattern that will make the code maintainable and scalable.
+
+I will not describe which part of the design is unoptimal because I think that
+the design pattern for the entire script needs to be resconsidered, not just some parts.
+I can verbally explain it to you in person if I must.
+
+---
+
+The direct cause of the bug is that
+the id attributes of the delete buttons of newly created users
+are not supplied with user id(s).
+
+I think what needs a "fix" is the whole design pattern, not this specific bug.
+This specific bug shed light on the unoptimal design pattern.
+
+---
